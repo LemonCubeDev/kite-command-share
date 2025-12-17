@@ -186,5 +186,5 @@
     console.log('--- ' + PREFIX + ': Setup Complete! ---');
     console.log('App ID:', appId);
     console.log('Status: Waiting for Command Creation POST...');
-    alert(PREFIX + ': Setup complete! Enter sharing code, then create your command to trigger the automation.');
+    alert(PREFIX + ': Command found! Create a new command to add it to your account.');
 })();
