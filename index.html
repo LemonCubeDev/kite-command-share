@@ -23,7 +23,7 @@
             border-top: 5px solid #EF6C00;
         }
         h1 {
-            color: #EF6C00; 
+            color: #EF6C00;
             font-size: 2.2em;
             margin-bottom: 5px;
         }
@@ -35,7 +35,7 @@
         }
         .code-block {
             background-color: #e8e8e8;
-            border-left: 5px solid #ff7f50;
+            border-left: 5px solid #EF6C00; /* Updated accent color */
             padding: 15px;
             margin: 20px 0;
             font-family: 'Consolas', 'Courier New', monospace;
@@ -62,6 +62,22 @@
             color: #EF6C00;
             font-weight: bold;
         }
+        .bookmarklet-button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 15px 10px;
+            background-color: #EF6C00;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: move; /* Indicate drag ability */
+            transition: background-color 0.2s;
+        }
+        .bookmarklet-button:hover {
+            background-color: #d96200;
+        }
     </style>
 </head>
 <body>
@@ -69,39 +85,61 @@
         <h1>🪁 LemonCube's Kite Command Share 🪁</h1>
         <p>The fast way to install and share complex Kite command flows with a single click.</p>
 
-        <h2>What is this Tool?</h2>
-        <p>This tool installs a small bookmarklet in your browser that intercepts the Kite command creation process. When you create a new command, the tool automatically injects a massive JSON payload (your shared flow) into the new command, saving you dozens of manual copy/paste steps.</p>
+        <h2>Tool Overview</h2>
+        <p>This system uses two bookmarklets for a complete sharing workflow:</p>
+        <ul>
+            <li>**Generator:** Extracts the complex JSON payload from an existing Kite command.</li>
+            <li>**Injector:** Automatically installs that extracted JSON payload into a new command.</li>
+        </ul>
 
-        <h2>Installation Instructions</h2>
-        <p>Follow these two steps to install the KCS bookmarklet in your browser.</p>
+        <h2>Installation Instructions: Drag & Drop</h2>
+        <p>To install, simply **drag the buttons below** up to your browser's bookmarks bar.</p>
+
+        <a 
+            class="bookmarklet-button" 
+            href="javascript:(function(){var url='https://kcs.lemoncube.dev/generator.js';fetch(url).then(response=>response.text()).then(script=>{eval(script);}).catch(error=>alert('Error loading Generator script: '+error));})();"
+            title="Drag this link to your bookmarks bar to install the Kite Generator.">
+            DRAG: Kite Generator
+        </a>
+
+        <a 
+            class="bookmarklet-button" 
+            href="javascript:(function(){var url='https://kcs.lemoncube.dev/injector.js';fetch(url).then(response=>response.text()).then(script=>{eval(script);}).catch(error=>alert('Error loading Injector script: '+error));})();"
+            title="Drag this link to your bookmarks bar to install the Kite Injector.">
+            DRAG: Kite Injector
+        </a>
+
+        <h2>How to Use KCS (Two Steps)</h2>
 
         <div class="step">
             <span class="number">1.</span>
-            <p><strong>Create a New Bookmark:</strong></p>
-            <p>Go to your browser's bookmark manager (or right-click your bookmarks bar) and create a new bookmark. You can name it anything, like "Kite Injector."</p>
+            <p><strong>GENERATE THE PAYLOAD:</strong></p>
+            <ol>
+                <li>Go to the **existing** Kite command you want to share.</li>
+                <li>Click the **Kite Generator** bookmarklet.</li>
+                <li>The raw JSON payload will be displayed in an alert/console. Copy this entire JSON string.</li>
+            </ol>
         </div>
         
         <div class="step">
             <span class="number">2.</span>
-            <p><strong>Paste the Code into the URL Field:</strong></p>
-            <p>Copy the following entire line of code and paste it into the **URL** (or **Address**) field of the new bookmark.</p>
-            
-            <div class="code-block">
-                javascript:(function(){var url='https://kcs.lemoncube.dev/kcs_injector.js';fetch(url).then(response=>response.text()).then(script=>{eval(script);}).catch(error=>alert('Error loading LemonCube script: '+error));})();
-            </div>
-            <a href="javascript:(function(){var url='https://kcs.lemoncube.dev/kcs_injector.js';fetch(url).then(response=>response.text()).then(script=>{eval(script);}).catch(error=>alert('Error loading LemonCube script: '+error));})();">Injector</a>
-            <p style="font-style: italic; font-size: 0.9em; margin-top: 10px;">This tiny script fetches the full, reliable injector code from this hosted page.</p>
+            <p><strong>INJECT THE PAYLOAD:</strong></p>
+            <ol>
+                <li>Go to the App page where you want to **create a new command**.</li>
+                <li>Click the **Kite Injector** bookmarklet.</li>
+                <li>A prompt will ask for the **BASE JSON PAYLOAD**. Paste the JSON string you copied in step 1 here.</li>
+                <li>The tool is now active! Go create a new command as normal (give it a name and description).</li>
+                <li>When you click "Save," the automation will run, injecting your complex flow instantly.</li>
+            </ol>
         </div>
-
-        <h2>How to Use KCS</h2>
-        <ol>
-            <li>Go to your Kite App's command page.</li>
-            <li>Click your **Kite Injector** bookmarklet.</li>
-            <li>A prompt will appear asking for the **BASE JSON PAYLOAD**. This is the long JSON string of the flow you want to share.</li>
-            <li>Enter the payload and click OK. The tool is now active!</li>
-            <li>Go into Kite and **create a new command** as normal (give it a name and description).</li>
-            <li>When you click "Save," the automation will run: it extracts the new Command ID from the URL and immediately sends a PATCH request to fill it with your large payload!</li>
-        </ol>
+        
+        <div style="margin-top: 40px;">
+            <p style="font-style: italic; font-size: 0.9em;">
+                The bookmarklets above are tiny loaders that fetch the full, stable code from 
+                <a href="https://kcs.lemoncube.dev/generator.js">generator.js</a> and 
+                <a href="https://kcs.lemoncube.dev/injector.js">injector.js</a>.
+            </p>
+        </div>
 
         <footer>
             <p style="font-size: 0.8em; margin-top: 40px;"><a href="https://lemoncube.dev/">Made by LemonCube</a></p>
