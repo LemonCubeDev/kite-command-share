@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LemonCube's Kite Command Share Tool</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            border-top: 5px solid #ff7f50; /* Tangerine/Lemon Accent Color */
+        }
+        h1 {
+            color: #ff7f50; 
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+        h2 {
+            color: #4a4a4a;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        .code-block {
+            background-color: #e8e8e8;
+            border-left: 5px solid #ff7f50;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            text-align: left;
+            overflow-x: auto;
+            border-radius: 4px;
+            white-space: pre-wrap; /* Allows the code to wrap nicely */
+        }
+        .step {
+            text-align: left;
+            margin-bottom: 20px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .step strong {
+            color: #1e88e5; /* Blue for emphasis */
+            font-size: 1.1em;
+        }
+        .step span.number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1.5em;
+            color: #ff7f50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍋 LemonCube's Kite Command Share: KCS 🚀</h1>
+        <p>The fast way to install and share complex Kite command flows with a single click.</p>
+
+        <h2>What is this Tool?</h2>
+        <p>This tool installs a small bookmarklet in your browser that intercepts the Kite command creation process. When you create a new command, the tool automatically injects a massive JSON payload (your shared flow) into the new command, saving you dozens of manual copy/paste steps.</p>
+
+        <h2>Installation Instructions</h2>
+        <p>Follow these two steps to install the KCS bookmarklet in your browser.</p>
+
+        <div class="step">
+            <span class="number">1.</span>
+            <p><strong>Create a New Bookmark:</strong></p>
+            <p>Go to your browser's bookmark manager (or right-click your bookmarks bar) and create a new bookmark. You can name it anything, like "Kite Injector."</p>
+        </div>
+        
+        <div class="step">
+            <span class="number">2.</span>
+            <p><strong>Paste the Code into the URL Field:</strong></p>
+            <p>Copy the following entire line of code and paste it into the **URL** (or **Address**) field of the new bookmark.</p>
+            
+            <div class="code-block">
+                javascript:(function(){var url='https://kcs.lemoncube.dev/kcs_injector.js';fetch(url).then(response=>response.text()).then(script=>{eval(script);}).catch(error=>alert('Error loading LemonCube script: '+error));})();
+            </div>
+            <p style="font-style: italic; font-size: 0.9em; margin-top: 10px;">This tiny script fetches the full, reliable injector code from this hosted page.</p>
+        </div>
+
+        <h2>How to Use KCS</h2>
+        <ol>
+            <li>Go to your Kite App's command page.</li>
+            <li>Click your **Kite Injector** bookmarklet.</li>
+            <li>A prompt will appear asking for the **BASE JSON PAYLOAD**. This is the long JSON string of the flow you want to share.</li>
+            <li>Enter the payload and click OK. The tool is now active!</li>
+            <li>Go into Kite and **create a new command** as normal (give it a name and description).</li>
+            <li>When you click "Save," the automation will run: it extracts the new Command ID from the URL and immediately sends a PATCH request to fill it with your large payload!</li>
+        </ol>
+
+        <footer>
+            <p style="font-size: 0.8em; margin-top: 40px;">Hosted on Cloudflare Pages via GitHub. The code ensures all console messages are prefixed with "LemonCube's Kite Command Share: ".</p>
+        </footer>
+    </div>
+</body>
+</html>
