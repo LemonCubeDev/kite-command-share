@@ -105,8 +105,8 @@
 
         <h2>Tool Overview</h2>
         <p>This system uses two bookmarklets for a complete sharing workflow:<br>
-        <b>Generator:</b> Extracts the complex JSON payload from an existing Kite command.<br>
-        <b>Injector:</b> Automatically installs that extracted JSON payload into a new command.</p>
+        <b>Generator:</b> Extracts the complex JSON code from an existing Kite command.<br>
+        <b>Receiver:</b> Automatically installs that extracted JSON code into a new command.</p>
 
         <h2>Installation Instructions: Drag & Drop</h2>
         <p>To install, simply <b>drag the buttons below</b> up to your browser's bookmarks bar.<br>
@@ -121,9 +121,9 @@
 
         <a 
             class="bookmarklet-button" 
-            href="javascript:(function(){var url='https://kcs.lemoncube.dev/injector.js';fetch(url).then(response=>response.text()).then(script=>{eval(script);}).catch(error=>alert('Error loading Injector script: '+error));})();"
-            title="Drag this link to your bookmarks bar to install the Kite Injector.">
-            KCS Injector
+            href="javascript:(function(){var url='https://kcs.lemoncube.dev/receiver';fetch(url).then(response=>response.text()).then(script=>{eval(script);}).catch(error=>alert('Error loading Injector script: '+error));})();"
+            title="Drag this link to your bookmarks bar to install the Kite Receiver.">
+            KCS Receiver
         </a>
 
         <h2>How To Use The Kite Command Share</h2>
@@ -145,7 +145,7 @@
             <p><strong> RECEIVE THE COMMAND:</strong></p>
             <ol>
                 <li>Go to your Kite commands page.</li>
-                <li>Click the <b>Injector</b> bookmarklet.</li>
+                <li>Click the <b>Receiver</b> bookmarklet.</li>
                 <li>A prompt will ask you to enter the <b>JSON sharing code</b>. Paste the JSON string you previously recieved.</li>
                 <li>The tool is now active! Click <b>Create Command</b> as normal and give it a name and description.</li>
                 <li>When you click <b>Create Command</b>, the automation will run, copying the command onto your account.</li>
@@ -157,7 +157,7 @@
             <p style="font-style: italic; font-size: 0.9em;">
                 The bookmarklets above have a single line that uses the full, stable code from 
                 <a href="https://kcs.lemoncube.dev/generator.js">generator.js</a> and 
-                <a href="https://kcs.lemoncube.dev/injector.js">injector.js</a>. All code is open sourced, so you can have peace of mind when using it.
+                <a href="https://kcs.lemoncube.dev/receiver.js">receiver.js</a>. All code is open sourced, so you can have peace of mind when using it.
             </p>
         </div>
 
