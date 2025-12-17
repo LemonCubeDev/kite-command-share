@@ -3,24 +3,11 @@
     let storedPayload = null;
     let capturedData = {
         name: null,
-        description: null,
-        session: null
+        description: null
     };
     let isMonitoring = false;
-    
-    // --- Utility Functions ---
-    function getSessionFromHeaders(headers) {
-        const cookieHeader = headers.get('Cookie') || '';
-        const match = cookieHeader.match(/kite-session=([^;]+)/);
-        return match ? match[1] : null;
-    }
 
-    function sendPatchRequest(appId, commandId, name, description, session) {
-        if (!session) {
-            console.error(PREFIX + ": Session value could not be captured. PATCH aborted.");
-            alert('Error: The Kite has flown away! Check console for details.');
-            return;
-        }
+    function sendPatchRequest(appId, commandId, name, description) {
         let finalPayload;
         try {
             const parsedPayload = JSON.parse(storedPayload);
@@ -32,159 +19,110 @@
                 return node;
             });
             finalPayload = JSON.stringify(parsedPayload);
-            console.log(PREFIX + ": Payload successfully prepared.");
         } catch (e) {
-            console.error(PREFIX + ": Failed to parse or modify user-provided JSON payload. Details:", e);
-            alert('Error: The Kite has flown away! Check console for details.');
+            console.error(PREFIX + ": Failed to parse/modify JSON payload:", e);
+            alert('Error: The Kite has flown away! Check the console for details.');
             return;
         }
-        console.log(PREFIX + "Sending PATCH request to update command...");
-        console.log(PREFIX + "Target URL:", `https://api.kite.onl/v1/apps/${appId}/commands/${commandId}`);
-        console.log(PREFIX + "Final Payload:", finalPayload);
+
+        console.log(PREFIX + ": Sending PATCH request with native credentials...");
         
         const myHeaders = new Headers();
-        myHeaders.append("accept-language", "en-US,en;q=0.9");
-        myHeaders.append("Cookie", `kite-session=${session}`);
-        myHeaders.append("Origin", "https://kite.onl");
-        myHeaders.append("Referer", "https://kite.onl/");
+        myHeaders.append("accept", "application/json");
         myHeaders.append("Content-Type", "application/json");
         
         const requestOptions = {
             method: "PATCH",
             headers: myHeaders,
             body: finalPayload,
+            // THIS IS THE KEY: It tells the browser to use your logged-in session automatically
+            credentials: 'include', 
             redirect: "follow"
         };
         
         fetch(`https://api.kite.onl/v1/apps/${appId}/commands/${commandId}`, requestOptions)
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const errText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errText}`);
                 }
-                return response.text();
+                return response.json();
             })
             .then(result => {
-                console.log(PREFIX + ": Success! Command PATCH Response received.");
-                alert('Complete!');
-                console.log(PREFIX + ": API Response Body:", result);
+                console.log(PREFIX + ": Success!", result);
+                alert('Success! The command has now been loaded onto your account.\n\nSimply reload the page to deactivate the injector and to view & edit your command.');
             })
             .catch(error => {
-                console.error(PREFIX + ": PATCH Request Failed! Details:", error);
-                alert('The kite has flown away! Check console for details.');
+                console.error(PREFIX + ": PATCH Failed:", error);
+                alert('Error: The Kite has flown away! Check the console for details.');
             });
     }
 
     // --- Setup Checks ---
-    if (typeof window.fetch !== 'function') {
-        console.error(PREFIX + ': window.fetch is not available.');
-        return;
-    }
-    const currentUrlPath = window.location.pathname;
-    const urlMatch = currentUrlPath.match(/\/apps\/([^\/]+)/);
+    const urlMatch = window.location.pathname.match(/\/apps\/([^\/]+)/);
     if (!urlMatch) {
-        console.error(PREFIX + ": Could not find app_id in URL path. Setup aborted.");
-        alert('The Kite has flown away! Check console for details.');
+        alert('Error: The Kite has flown away! Check the console for details.');
+        console.warn(PREFIX + ': Not run on the Kite apps page! (kite.onl/apps/...)');
         return;
     }
     const appId = urlMatch[1];
     
-    // --- Prompt for Payload ---
-    storedPayload = prompt(PREFIX + ': Enter the JSON sharing code.');
+    // --- Step 1: Prompt ---
+    storedPayload = prompt(PREFIX + "has been activated!\n\nEnter the JSON sharing code to begin:");
     if (!storedPayload) {
-        console.log(PREFIX + ": Payload input cancelled. Setup aborted.");
-        alert('The Kite has flown away! Check console for details.');
+        console.log(PREFIX + ": Setup cancelled.");
         return;
     }
 
-    // --- URL Monitoring Setup ---
     const urlIdPattern = new RegExp(`^/apps/${appId}/commands/([^/]+)`);
     
     function checkAndPatch() {
-        const newPath = window.location.pathname;
-        const pathMatch = newPath.match(urlIdPattern);
-        
+        const pathMatch = window.location.pathname.match(urlIdPattern);
         if (pathMatch && capturedData.name) {
             const newCommandId = pathMatch[1];
-            console.log(PREFIX + `: New Command ID Captured from URL: ${newCommandId}`);
-            
-            // Cleanup listeners
             window.removeEventListener('popstate', checkAndPatch);
             history.pushState = originalPushState; 
-
-            // Use a timeout to ensure the UI is fully loaded before the PATCH request
+            
             setTimeout(() => {
-                sendPatchRequest(appId, newCommandId, capturedData.name, capturedData.description, capturedData.session);
-            }, 500);
+                sendPatchRequest(appId, newCommandId, capturedData.name, capturedData.description);
+            }, 800);
             
             isMonitoring = false;
         }
     }
 
-    // Intercept pushState (used by Single Page Apps for navigation)
     const originalPushState = history.pushState;
     history.pushState = function() {
         originalPushState.apply(history, arguments);
-        if (isMonitoring) {
-            checkAndPatch();
-        }
+        if (isMonitoring) checkAndPatch();
     };
     window.addEventListener('popstate', checkAndPatch);
-    // --- End URL Monitoring Setup ---
 
     // --- Fetch Interceptor ---
     const originalFetch = window.fetch;
     window.fetch = function(url, options) {
-        if (options && options.method && options.method.toUpperCase() === 'POST' && url.includes('/commands') && options.body) {
-            let session = null;
-            try {
-                if (options.headers) {
-                    // Create a safe Headers object to maximize session capture chances
-                    const safeHeaders = new Headers(options.headers);
-                    session = getSessionFromHeaders(safeHeaders);
-                }
-            } catch (e) {
-                console.warn(PREFIX + ": Failed to read headers for session capture (Framework conflict).", e);
-            }
-            
-            console.log(PREFIX + ': POST Intercepted. Session captured.');
-            
+        if (options?.method?.toUpperCase() === 'POST' && url.includes('/commands') && options.body) {
             try {
                 const parsedBody = JSON.parse(options.body);
                 const entryNode = parsedBody.flow_source.nodes.find(node => node.type === 'entry_command');
-                const commandName = entryNode?.data.name;
-                const commandDescription = entryNode?.data.description || "";
                 
-                if (commandName) {
-                    console.log(PREFIX + `: Name: "${commandName}", Description: "${commandDescription}"`);
-                    
-                    // Store data and start URL monitoring immediately
+                if (entryNode?.data.name) {
+                    console.log(PREFIX + ": New Command creation detected. Capturing info...");
                     capturedData = {
-                        name: commandName,
-                        description: commandDescription,
-                        session: session
+                        name: entryNode.data.name,
+                        description: entryNode.data.description || ""
                     };
                     isMonitoring = true;
                     
-                    // Allow the original POST to proceed
-                    return originalFetch(url, options).then(response => {
-                        // After the POST finishes, check if the URL has already changed
+                    return originalFetch(url, options).then(res => {
                         checkAndPatch();
-                        return response;
+                        return res;
                     });
-                } else {
-                    console.warn(PREFIX + ": Could not extract name/description from POST body.");
                 }
-            } catch (e) {
-                console.error(PREFIX + ": Error parsing intercepted POST body.", e);
-                alert('The Kite has flown away! Check console for details.');
-            }
+            } catch (e) {}
         }
         return originalFetch(url, options);
     };
-
-    // --- Final Initialization Messages ---
-    console.log('--- ' + PREFIX + ': Setup Complete! ---');
-    console.log('App ID:', appId);
-    console.log('Status: Waiting for Command Creation POST...');
-    alert(PREFIX + ': Command found! Create a new command to add it to your account.');
+    console.log(PREFIX + "Setup Complete. Waiting for command creation...");
+    alert('The JSON sharing code has been entered!\n\nNow, go ahead and create your command. You can give it any name and description.');
 })();
