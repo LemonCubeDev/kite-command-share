@@ -50,7 +50,7 @@
             })
             .then(result => {
                 console.log(PREFIX + ": Success!", result);
-                alert('Success! The command has now been loaded onto your account.\n\nSimply reload the page to deactivate the injector and to view & edit your command.');
+                alert('Success! The command has now been loaded onto your account.\n\nSimply reload the page to deactivate the receiver and to view & edit your command.');
             })
             .catch(error => {
                 console.error(PREFIX + ": PATCH Failed:", error);
