@@ -125,40 +125,43 @@
             Code Injector
         </a>
 
-        <h2>How to Use KCS (Two Steps)</h2>
+        <h2>How To Use The Kite Command Share</h2>
 
         <div class="step">
             <span class="number">1. </span>
-            <p><strong>GENERATE THE PAYLOAD:</strong></p>
+            <p><strong> GENERATE THE SHARING CODE:</strong></p>
             <ol>
-                <li>Go to the **existing** Kite command you want to share.</li>
-                <li>Click the **Kite Generator** bookmarklet.</li>
-                <li>The raw JSON payload will be displayed in an alert/console. Copy this entire JSON string.</li>
+                <li>Go to the <b>existing</b> Kite command you want to share.</li>
+                <li>Click the <b>Generator</b> bookmarklet.</li>
+                <li>Click <b>Save Changes</b>.</li>
+                <li>The raw JSON code will be automatically copied to your clipboard.</li>
+                <li>Share the JSON code with the <b>receiving</b> user.</li>
             </ol>
         </div>
         
         <div class="step">
             <span class="number">2. </span>
-            <p><strong>INJECT THE PAYLOAD:</strong></p>
+            <p><strong> INJECT THE PAYLOAD:</strong></p>
             <ol>
-                <li>Go to the App page where you want to **create a new command**.</li>
-                <li>Click the **Kite Injector** bookmarklet.</li>
-                <li>A prompt will ask for the **BASE JSON PAYLOAD**. Paste the JSON string you copied in step 1 here.</li>
-                <li>The tool is now active! Go create a new command as normal (give it a name and description).</li>
-                <li>When you click "Save," the automation will run, injecting your complex flow instantly.</li>
+                <li>Go to your Kite commands page.</li>
+                <li>Click the <b>Injector</b> bookmarklet.</li>
+                <li>A prompt will ask you to enter the <b>JSON sharing code</b>. Paste the JSON string you previously recieved.</li>
+                <li>The tool is now active! Click <b>Create Command</b> as normal and give it a name and description.</li>
+                <li>When you click <b>Create Command</b>, the automation will run, copying the command onto your account.</li>
+                <li>Simply reload the page, and there you go! The command has now been fully copied onto your account.</li>
             </ol>
         </div>
         
         <div style="margin-top: 40px;">
             <p style="font-style: italic; font-size: 0.9em;">
-                The bookmarklets above are tiny loaders that fetch the full, stable code from 
+                The bookmarklets above have a single line that uses the full, stable code from 
                 <a href="https://kcs.lemoncube.dev/generator.js">generator.js</a> and 
-                <a href="https://kcs.lemoncube.dev/injector.js">injector.js</a>.
+                <a href="https://kcs.lemoncube.dev/injector.js">injector.js</a>. All code is open sourced, so you can have peace of mind when using it.
             </p>
         </div>
 
         <footer>
-            <p style="font-size: 0.8em; margin-top: 40px;"><a href="https://lemoncube.dev/">Made by LemonCube</a></p>
+            <p style="font-size: 0.8em; margin-top: 40px;"><a href="https://discord.com/users/951992958696161340">Made by LemonCube</a></p>
         </footer>
     </div>
 </body>
