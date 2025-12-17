@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LemonCube's Kite Command Share</title>
+    <title>LemonCube's Kite Command Share Tool</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -22,6 +22,17 @@
             border-radius: 12px;
             border-top: 5px solid #EF6C00;
         }
+        /* Logo Container Styling */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* Space between logo/text */
+        }
+        .logo-container img {
+            height: 30px; /* Adjust size of logos */
+            vertical-align: middle;
+        }
         h1 {
             color: #EF6C00;
             font-size: 2.2em;
@@ -35,7 +46,7 @@
         }
         .code-block {
             background-color: #e8e8e8;
-            border-left: 5px solid #EF6C00; /* Updated accent color */
+            border-left: 5px solid #EF6C00;
             padding: 15px;
             margin: 20px 0;
             font-family: 'Consolas', 'Courier New', monospace;
@@ -72,7 +83,7 @@
             font-weight: bold;
             border-radius: 6px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            cursor: move; /* Indicate drag ability */
+            cursor: move;
             transition: background-color 0.2s;
         }
         .bookmarklet-button:hover {
@@ -82,7 +93,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>🪁 LemonCube's Kite Command Share 🪁</h1>
+        <h1>
+            <div class="logo-container">
+                <img src="https://cdn.lemoncube.dev/images/LemonCube.png" alt="LemonCube Logo">
+                LemonCube's Kite Command Share
+                <img src="https://kite.onl/logo.png" alt="Kite Logo">
+            </div>
+        </h1>
         <p>The fast way to install and share complex Kite command flows with a single click.</p>
 
         <h2>Tool Overview</h2>
