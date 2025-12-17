@@ -3,37 +3,11 @@
     let storedPayload = null;
     let capturedData = {
         name: null,
-        description: null,
-        session: null
+        description: null
     };
     let isMonitoring = false;
-    
-    // --- IMPROVED: Utility Function to find the Session ---
-    function getKiteSession(headers) {
-        // Method 1: Check document.cookie (Most reliable for non-HttpOnly)
-        const docMatch = document.cookie.match(/kite-session=([^;]+)/);
-        if (docMatch) return docMatch[1];
 
-        // Method 2: Check intercepted headers (Backup)
-        if (headers) {
-            const cookieHeader = headers.get('Cookie') || '';
-            const headerMatch = cookieHeader.match(/kite-session=([^;]+)/);
-            if (headerMatch) return headerMatch[1];
-        }
-
-        return null;
-    }
-
-    function sendPatchRequest(appId, commandId, name, description, session) {
-        // If session is still missing, we try one LAST look at document.cookie
-        const finalSession = session || getKiteSession();
-
-        if (!finalSession) {
-            console.error(PREFIX + "Session value could not be captured. PATCH aborted.");
-            alert(PREFIX + "Error: Could not find your session cookie. Please ensure you are logged in.");
-            return;
-        }
-
+    function sendPatchRequest(appId, commandId, name, description) {
         let finalPayload;
         try {
             const parsedPayload = JSON.parse(storedPayload);
@@ -46,45 +20,58 @@
             });
             finalPayload = JSON.stringify(parsedPayload);
         } catch (e) {
-            console.error(PREFIX + "Failed to parse payload. Details:", e);
+            console.error(PREFIX + "Failed to parse/modify JSON payload:", e);
+            alert(PREFIX + "Error: The JSON payload you entered is invalid.");
             return;
         }
 
-        console.log(PREFIX + "Sending PATCH request...");
+        console.log(PREFIX + "Sending PATCH request with native credentials...");
         
         const myHeaders = new Headers();
-        myHeaders.append("accept-language", "en-US,en;q=0.9");
-        myHeaders.append("Cookie", `kite-session=${finalSession}`);
-        myHeaders.append("Origin", "https://kite.onl");
-        myHeaders.append("Referer", "https://kite.onl/");
+        myHeaders.append("accept", "application/json");
         myHeaders.append("Content-Type", "application/json");
         
         const requestOptions = {
             method: "PATCH",
             headers: myHeaders,
             body: finalPayload,
+            // THIS IS THE KEY: It tells the browser to use your logged-in session automatically
+            credentials: 'include', 
             redirect: "follow"
         };
         
         fetch(`https://api.kite.onl/v1/apps/${appId}/commands/${commandId}`, requestOptions)
-            .then(response => response.ok ? response.text() : Promise.reject(response.status))
+            .then(async response => {
+                if (!response.ok) {
+                    const errText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errText}`);
+                }
+                return response.json();
+            })
             .then(result => {
-                console.log(PREFIX + "Success! Command Injected.");
+                console.log(PREFIX + "Success!", result);
                 alert(PREFIX + "Automation complete! Flow injected successfully.");
             })
             .catch(error => {
                 console.error(PREFIX + "PATCH Failed:", error);
-                alert(PREFIX + "PATCH failed. Session might be invalid.");
+                alert(PREFIX + "Injection failed. Ensure you are logged in and check the console.");
             });
     }
 
-    // --- Setup and URL Logic (Same as before) ---
+    // --- Setup Checks ---
     const urlMatch = window.location.pathname.match(/\/apps\/([^\/]+)/);
-    if (!urlMatch) return;
+    if (!urlMatch) {
+        alert(PREFIX + "Error: Run this on the App page (kite.onl/apps/...)");
+        return;
+    }
     const appId = urlMatch[1];
     
+    // --- Step 1: Prompt ---
     storedPayload = prompt(PREFIX + "Enter the BASE JSON payload:");
-    if (!storedPayload) return;
+    if (!storedPayload) {
+        console.log(PREFIX + "Setup cancelled.");
+        return;
+    }
 
     const urlIdPattern = new RegExp(`^/apps/${appId}/commands/([^/]+)`);
     
@@ -94,9 +81,11 @@
             const newCommandId = pathMatch[1];
             window.removeEventListener('popstate', checkAndPatch);
             history.pushState = originalPushState; 
+            
             setTimeout(() => {
-                sendPatchRequest(appId, newCommandId, capturedData.name, capturedData.description, capturedData.session);
-            }, 500);
+                sendPatchRequest(appId, newCommandId, capturedData.name, capturedData.description);
+            }, 800);
+            
             isMonitoring = false;
         }
     }
@@ -108,25 +97,22 @@
     };
     window.addEventListener('popstate', checkAndPatch);
 
-    // --- UPDATED: Fetch Interceptor ---
+    // --- Fetch Interceptor ---
     const originalFetch = window.fetch;
     window.fetch = function(url, options) {
         if (options?.method?.toUpperCase() === 'POST' && url.includes('/commands') && options.body) {
-            
-            // Try to grab session immediately
-            const session = getKiteSession(new Headers(options.headers));
-            console.log(PREFIX + `POST Intercepted. Session found: ${!!session}`);
-            
             try {
                 const parsedBody = JSON.parse(options.body);
                 const entryNode = parsedBody.flow_source.nodes.find(node => node.type === 'entry_command');
+                
                 if (entryNode?.data.name) {
+                    console.log(PREFIX + "New Command creation detected. Capturing info...");
                     capturedData = {
                         name: entryNode.data.name,
-                        description: entryNode.data.description || "",
-                        session: session
+                        description: entryNode.data.description || ""
                     };
                     isMonitoring = true;
+                    
                     return originalFetch(url, options).then(res => {
                         checkAndPatch();
                         return res;
@@ -136,6 +122,6 @@
         }
         return originalFetch(url, options);
     };
-
-    console.log(PREFIX + "Setup Complete. Waiting for POST...");
+    console.log(PREFIX + "Setup Complete. Waiting for command creation...");
+    alert(PREFIX + "Setup complete!\n\nNow, go ahead and create your command. When you click 'Save', the flow will be automatically injected.");
 })();
