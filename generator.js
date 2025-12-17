@@ -45,6 +45,6 @@
         alert(PREFIX + ' is now active! Click "Save Changes" on your command to generate the code. Once generated, it will automatically copy to your clipboard.');
     } else {
         alert('Error: The Kite has flown away! Check console for details.');
-        console.error(PREFIX + ': window.fetch not available. Script failed to load.'
+        console.error(PREFIX + ': window.fetch not available. Script failed to load.');
     }
 })();
