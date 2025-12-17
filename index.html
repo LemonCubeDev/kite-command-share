@@ -58,21 +58,33 @@
             }
             .step {
             text-align: left;
+            margin-top: 40px;      /* Added more space ABOVE each numbered section */
             margin-bottom: 20px;
-            padding-left: 20px;
+            padding-left: 45px;    /* Increased padding to prevent text from hitting the number */
             position: relative;
             }
             .step strong {
             color: #1e88e5;
-            font-size: 1.1em;
+            font-size: 1.2em;      /* Slightly larger header text */
+            display: inline-block;
+            margin-bottom: 10px;   /* Space between the blue header and the list below */
             }
             .step span.number {
             position: absolute;
             left: 0;
-            top: 0;
-            font-size: 1.5em;
+            top: -5px;             /* Slight adjustment to align perfectly with the blue header */
+            font-size: 1.8em;      /* Larger, clearer numbers */
             color: #EF6C00;
             font-weight: bold;
+            line-height: 1;
+            }
+            /* Ensure the lists inside steps have proper indentation */
+            .step ol {
+            margin-top: 5px;
+            padding-left: 20px;
+            }
+            .step li {
+            margin-bottom: 8px;
             }
             .bookmarklet-button {
             display: inline-block;
