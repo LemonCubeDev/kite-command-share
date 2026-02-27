@@ -102,7 +102,7 @@
             .bookmarklet-button:hover {
             background-color: #d96200;
             }
-            .disclaimer {
+            .disclaimer-class {
             margin-top: 40px;
             padding: 20px;
             background-color: #fff8f1; /* Light orange tint */
@@ -112,16 +112,16 @@
             font-size: 0.9em;
             line-height: 1.5;
             }
-            .disclaimer h3 {
+            .disclaimer-class h3 {
             margin-top: 0;
             color: #e65100; /* Darker orange for the warning header */
             font-size: 1.1em;
             }
-            .disclaimer ul {
+            .disclaimer-class ul {
             margin-bottom: 0;
             padding-left: 20px;
             }
-            .disclaimer li {
+            .disclaimer-class li {
             margin-bottom: 8px;
             }
         </style>
@@ -141,8 +141,8 @@
                 <b>Generator:</b> Extracts the complex JSON code from an existing Kite command.<br>
                 <b>Receiver:</b> Automatically installs that extracted JSON code into a new command.
             </p>
-<h3> KCS does not currently work on mobile. For any support, DM me (lemoncube.dev), or ping me (@LemonCube | Ping For Help) in #general/#support. </h3>
-            <h2>Installation Instructions: Drag & Drop</h2>
+<p> KCS does not currently work on mobile. For any support, DM me (lemoncube.dev), or ping me (@LemonCube | Ping For Help) in #general/#support. <p>
+            <h2 id="install">Installation: Drag & Drop</h2>
             <p>To install, simply <b>drag the buttons below</b> up to your browser's bookmarks bar.<br>
                 At any time, you can reload the page, and both bookmarklets will be <b>deactivated.</b>
             </p>
@@ -158,7 +158,7 @@
                 title="Drag this link to your bookmarks bar to install the Kite Receiver.">
             KCS Receiver
             </a>
-            <h2>How To Use The Kite Command Share</h2>
+            <h2 id="instructions">Instructions: How To Use</h2>
             <div class="step">
                 <span class="number">1. </span>
                 <p><strong> GENERATE THE SHARING CODE:</strong></p>
@@ -189,8 +189,8 @@
                     <a href="https://kcs.lemoncube.dev/receiver.js">receiver.js</a>. All code is open sourced, so you can have peace of mind when using it.
                 </p>
             </div>
-            <div class="disclaimer">
-                <h3>⚠️ Disclaimer & User Responsibility</h3>
+            <div class="disclaimer-class">
+                <h3 id="disclaimer">⚠️ Disclaimer & User Responsibility</h3>
                 <p>
                     <strong>LemonCube's Kite Command Share (KCS)</strong> is an unofficial, community-made power user tool. 
                     It is not affiliated with, endorsed by, or supported by <strong>Kite (kite.onl)</strong> or its developers.
