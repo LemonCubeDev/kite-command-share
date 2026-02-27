@@ -1,3 +1,21 @@
+/*!
+ * LemonCube's Kite Command Share Generator Bookmarklet
+ * LemonCube
+ * Copyright (c) 2026 LemonCube. All rights reserved.
+ * 
+ * LICENSE NOTICE: 
+ * This code is provided for personal use and security auditing only. 
+ * Distribution, modification, and commercial use are strictly prohibited.
+ *
+ * PERMITTED HOSTING:
+ * Use of this code is strictly limited to personal bookmarklets 
+ * with use on the Kite platform (kite.onl) and authorized 
+ * self-hosted instances of Kite. Hosting on any other website or 
+ * service requires express written consent.
+ *
+ * Full License: https://kcs.lemoncube.dev/LICENSE.md
+ */
+
 (function() {
     const PREFIX = "LemonCube's Kite Command Share";
 
