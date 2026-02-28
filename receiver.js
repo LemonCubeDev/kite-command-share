@@ -58,7 +58,7 @@
             redirect: "follow"
         };
         
-        fetch(`https://api.kite.onl/v1/apps/${appId}/commands/${commandId}`, requestOptions)
+        fetch(`${apiBase}/v1/apps/${appId}/commands/${commandId}`, requestOptions)
             .then(async response => {
                 if (!response.ok) {
                     const errText = await response.text();
@@ -85,6 +85,18 @@
     }
     const appId = urlMatch[1];
     
+const currentHost = window.location.hostname;
+const currentPort = window.location.port;
+const protocol = window.location.protocol;
+
+let apiBase;
+if (currentHost === 'kite.onl' || currentHost === 'www.kite.onl') {
+    apiBase = 'https://api.kite.onl';
+} else {
+    // For self-hosted: prepend "api." to the hostname, keep port and protocol
+    const portSuffix = currentPort ? `:${currentPort}` : '';
+    apiBase = `${protocol}//api.${currentHost}${portSuffix}`;
+}
     // --- Step 1: Prompt ---
     storedPayload = prompt(PREFIX + "has been activated!\n\nEnter the JSON sharing code to begin:");
     if (!storedPayload) {
