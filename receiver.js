@@ -98,7 +98,7 @@ if (currentHost === 'kite.onl' || currentHost === 'www.kite.onl') {
     apiBase = `${protocol}//api.${currentHost}${portSuffix}`;
 }
     // --- Step 1: Prompt ---
-    storedPayload = prompt(PREFIX + "has been activated!\n\nEnter the JSON sharing code to begin:");
+    storedPayload = prompt(PREFIX + " has been activated!\n\nEnter the JSON sharing code to begin:");
     if (!storedPayload) {
         console.log(PREFIX + ": Setup cancelled.");
         return;
